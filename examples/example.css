@@ -1,0 +1,50 @@
+#tabs {
+    display: grid; grid-template: max-content 1fr / 100%;
+    margin: 20px; border: 1px solid black; padding: 5px;
+    min-height: 50vh;
+    background-color: #f0f0f0; box-shadow: inset 0 0 5px 0 grey;
+    overflow-x: clip;
+}
+#tabs > .tabs-content { display: grid; overflow-x: clip; }
+#tabs > .tabs-content > div {
+    background-color: white;
+    display: none; overflow-x: clip;
+    padding: 10px; border: 1px solid gray;
+}
+#tabs > .tabs-content > div.selected-tab { display: block; }
+#tabs > .tabs-list { margin-left: 3px; }
+#tabs > .tabs-list > div {
+    border: 1px solid gray; border-bottom: none;
+    background-color: #a0a0a0;
+    display: inline-grid; grid-template: 100% / max-content max-content;
+}
+#tabs > .tabs-list > div.selected-tab { background-color: white !important; transform: translateY(3px); }
+#tabs > .tabs-list > div > button { background: none; border: none; }
+#tabs > .tabs-list > div > button.close-button:hover { background: red; transition: 0.3s; }
+
+.window-frame {
+    border: 1px solid black; border-radius: 3px;
+    display: grid; grid-template: max-content 1fr / 1fr;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    background-color: white;
+}
+.window-frame > .window-head {
+    background-color: darkslategrey;
+    border-bottom: 1px solid black;
+    display: grid; grid-template: max-content / 1fr max-content;
+}
+.window-frame > .window-head > .window-title {
+    color: white;
+    text-align: center;
+    font-family: system-ui;
+    margin: 3px;
+    cursor: move;
+    user-select: none;
+}
+.window-frame > .window-head > button { background: none; border: none; color: white; }
+.window-frame > .window-head > button.close-button:hover { background: red; transition: 0.3s; }
+.window-frame > .window-content {
+    margin: 10px;
+    overflow: auto;
+}

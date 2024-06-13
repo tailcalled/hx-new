@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        <script src="/src/hx-new.js"></script>
+        <link rel="stylesheet" href="example.css">
+
+        <script>
+            function drag(element, event) {
+                drag.draggingElement = element;
+                drag.startX = element.getBoundingClientRect().left;
+                drag.startY = element.getBoundingClientRect().top;
+                drag.clickX = event.clientX;
+                drag.clickY = event.clientY;
+            }
+            function bringToFront(element) {
+                element.style.zIndex = Math.max(...[...document.querySelectorAll('.window-frame')].map(x => +x.style.zIndex))+1;
+            }
+        </script>
+
+
+    </head>
+    <body hx-ext="hx-new" onmousemove="if (drag.draggingElement) {
+        drag.draggingElement.style.left = (event.clientX - drag.clickX + drag.startX) + 'px';
+        drag.draggingElement.style.top = (event.clientY - drag.clickY + drag.startY) + 'px';
+    }" onmouseup="drag.draggingElement = null;">
+
+        <a href="tabs.html">See also: tabs.</a>
+
+        <button hx-get="/placeholders/lipsum.html" hx-swap="new:#window">Open Lipsum</button>
+        <button hx-get="/placeholders/form.html" hx-swap="new:#window">Open Form</button>
+
+        <div id="desktop">
+        </div>
+
+
+        <template id="window" hx-target="#desktop" hx-swap="beforeend">
+            <div class="window-frame"
+                    style="z-index: 1; left: 100px; top: 100px; width: 400px; height: 300px;"
+                    id="window-root"
+                    onmousedown*="bringToFront(document.querySelector('#window-root'))"
+                    hx-new:oncreate*="bringToFront(document.querySelector('#window-root'))"
+            >
+                <div class="window-head">
+                    <div class="window-title" onmousedown*="drag(document.querySelector('#window-root'), event)" hx-slot="#title">Untitled Window</div>
+                    <button type="button" class="close-button" onclick*="document.querySelector('#window-root').remove();">X</button>
+                </div>
+                <div class="window-content" hx-slot></div>
+            </div>
+        </template>
+
+    </body>
+</html>

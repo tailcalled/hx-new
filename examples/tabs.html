@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        <script src="/src/hx-new.js"></script>
+        <link rel="stylesheet" href="example.css">
+
+        <script>
+            function updateSelection(selectedElements, selectedHead) {
+                for (let node of document.querySelectorAll("#tabs > .tabs-content > div")) {
+                    node.classList.remove("selected-tab");
+                }
+                for (let node of document.querySelectorAll("#tabs > .tabs-list > div")) {
+                    node.classList.remove("selected-tab");
+                }
+                document.querySelector(selectedElements).classList.add("selected-tab");
+                document.querySelector(selectedHead).classList.add("selected-tab");
+            }
+        </script>
+
+
+    </head>
+    <body hx-ext="hx-new">
+
+        <a href="windows.html">See also: windows.</a>
+
+        <button hx-get="/placeholders/lipsum.html" hx-swap="new:#tab">Open Lipsum</button>
+        <button hx-get="/placeholders/form.html" hx-swap="new:#tab">Open Form</button>
+
+
+        <div id="tabs">
+            <div class="tabs-list"></div>
+            <div class="tabs-content"></div>
+        </div>
+
+
+        <template id="tab" hx-target="#tabs .tabs-content" hx-swap="beforeend">
+            <template hx-target="#tabs .tabs-list" hx-swap="beforeend">
+                <div id="tab-head">
+                    <button type="button" onclick*="updateSelection('#tab-elements', '#tab-head')" hx-slot="#title">
+                        Untitled Tab
+                    </button>
+                    <button type="button" class="close-button" onclick*="
+                        document.querySelector('#tab-elements').remove();
+                        document.querySelector('#tab-head').remove();
+                        updateSelection('#tabs > .tabs-content > div', '#tabs > .tabs-list > div')
+                    ">X</button>
+                </div>
+            </template>
+            <div id="tab-elements" hx-new:oncreate*="updateSelection('#tab-elements', '#tab-head')" hx-slot></div>
+        </template>
+
+    </body>
+</html>
