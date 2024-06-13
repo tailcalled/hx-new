@@ -19,6 +19,7 @@ Features:
  * When a template is instantiated, all of its IDs are replaced. So e.g. if the template is declared to have an element with id `#tab-elements`, it may be replaced with `#tab-elements-9797446247116723`. To refer to an ID, add an asterisk at the end of the HTML attribute.
  * When `hx-new` is asked to swap in a response from a URL that has already been swapped in, we update the existing element instead of instantiating a new copy of the template.
  * Once the elements are instantiated, the Javascript in `hx-new:oncreate` attributes is run.
+ * The templates can refer to the original response URL using `htmx://response-url/` (not shown in any examples currently, sorry).
 
 # Should I use hx-new?
 
