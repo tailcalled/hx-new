@@ -12,10 +12,10 @@ Examples: [tabs](https://tailcalled.github.io/hx-new/examples/tabs.html) ([src](
 Let's say you have a basic htmx site where you can open some entities:
 
 ```html
-<button hx-get="../placeholders/lipsum.html" hx-target="#list">Open Lipsum</button>
-<button hx-get="../placeholders/form.html" hx-target="#list">Open Form</button>
+<button hx-get="../placeholders/lipsum.html" hx-target="#entity">Open Lipsum</button>
+<button hx-get="../placeholders/form.html" hx-target="#entity">Open Form</button>
 
-<ul id="list"></ul>
+<div id="entity"></div>
 ```
 
 This works fine at first, but then you want the user to be able to open more entities at once. You try the obvious option of adding `hx-swap="beforeend"`:
