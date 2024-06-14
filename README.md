@@ -147,7 +147,7 @@ If you can render your components with server side templating, do that rather th
 [facet](https://github.com/kgscialdone/facet).) hx-new has client-side templating as a core feature, but they are not very dynamic or robust and the
 main reason for their existence is to support the other features.
 
-If you do not want to rely on experimental/incomplete technology, make hand-written components rather than using hx-new. I kind of hard to rewrite a
+If you do not want to rely on experimental/incomplete technology, make hand-written components rather than using hx-new. I kind of had to rewrite a
 good chunk of the htmx swapping logic to make hx-new work, and I know there's lots of things I haven't implemented yet. I hope to iron out any bugs as I
 encounter them, but there are parts of htmx I don't really use, so they will likely be broken in hx-new indefinitely.
 
