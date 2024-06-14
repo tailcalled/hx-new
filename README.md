@@ -2,10 +2,11 @@
 
 [htmx](https://htmx.org/) is a great library/[framework](https://htmx.org/essays/is-htmx-another-javascript-framework/) for sprinkling
 interactivity to hypermedia sites. However, when I create entities that can be dynamically opened and closed (e.g. tabs or windows), I find
-htmx gets a bit too rigid. hx-new is an experimental extension which aims to make htmx 10% more dynamic by adding templates with more advanced
-wiring (#id namespaces, anti-duplication measures, multiple targeting, update events).
+htmx gets a bit too rigid. [hx-new](https://github.com/tailcalled/hx-new/tree/main) is an experimental extension which aims to make htmx 10%
+more dynamic by adding templates with more advanced wiring (#id namespaces, anti-duplication measures, multiple targeting, update events).
 
-Examples: [tabs](https://tailcalled.github.io/hx-new/examples/tabs.html) ([src](https://github.com/tailcalled/hx-new/blob/main/examples/tabs.html)), [windows](https://tailcalled.github.io/hx-new/examples/windows.html) ([src](https://github.com/tailcalled/hx-new/blob/main/examples/windows.html)).
+Examples: [tabs](https://tailcalled.github.io/hx-new/examples/tabs.html) ([src](https://github.com/tailcalled/hx-new/blob/main/examples/tabs.html)),
+[windows](https://tailcalled.github.io/hx-new/examples/windows.html) ([src](https://github.com/tailcalled/hx-new/blob/main/examples/windows.html)).
 
 # Purpose
 
@@ -18,7 +19,8 @@ Let's say you have a basic htmx site where you can open some entities:
 <div id="entity"></div>
 ```
 
-This works fine at first, but then you want the user to be able to open more entities at once. You try the obvious option of adding `hx-swap="beforeend"`:
+This works fine at first, but then you want the user to be able to open more entities at once. You try the obvious option of adding
+`hx-swap="beforeend"`:
 
 ```html
 <button hx-get="../placeholders/lipsum.html" hx-target="#list" hx-swap="beforeend">Open Lipsum</button>
@@ -27,7 +29,9 @@ This works fine at first, but then you want the user to be able to open more ent
 <ul id="list"></ul>
 ```
 
-... but now if the user repeatedly clicks a button, they can end up with a bunch of duplicates. What if we only want one copy of each opened element? hx-new [solves this problem](https://tailcalled.github.io/hx-new/examples/list.html) by adding a new swap method, `new:<template selector>`:
+... but now if the user repeatedly clicks a button, they can end up with a bunch of duplicates. What if we only want one copy of each
+opened element? hx-new [solves this problem](https://tailcalled.github.io/hx-new/examples/list.html) by adding a new swap method,
+`new:<template selector>`:
 
 ```html
 <button hx-get="../placeholders/lipsum.html" hx-swap="new:#item">Open Lipsum</button>
@@ -40,7 +44,9 @@ This works fine at first, but then you want the user to be able to open more ent
 </template>
 ```
 
-The first time you click the "Open Lipsum" button, hx-new instantiates a new element under `#list` with the requested values. The second time you click "Open Lipsum", hx-new recognizes that there already is an instance of `#item` from `placeholders/lipsum.html`, and then it just updates this `#item` instead of creating a new one.
+The first time you click the "Open Lipsum" button, hx-new instantiates a new element under `#list` with the requested values. The second
+time you click "Open Lipsum", hx-new recognizes that there already is an instance of `#item` from `placeholders/lipsum.html`, and then it
+just updates this `#item` instead of creating a new one.
 
 ## Additional features
 
@@ -56,9 +62,12 @@ The first time you click the "Open Lipsum" button, hx-new instantiates a new ele
 </template>
 ```
 
-To avoid collisions between IDs, hx-new allocates unique ID's behind the scenes, so the list item's ID ends up being something like `#list-item-4499221362078367` instead of `#list-item`. The `*` at the end of a property like `onclick*` specifies that hx-new should use the unique IDs within the property, so it gets replaced with `onclick="document.querySelector('#list-item-4499221362078367').remove();"`.
+To avoid collisions between IDs, hx-new allocates unique ID's behind the scenes, so the list item's ID ends up being something like 
+`#list-item-4499221362078367` instead of `#list-item`. The `*` at the end of a property like `onclick*` specifies that hx-new should
+use the unique IDs within the property, so it gets replaced with `onclick="document.querySelector('#list-item-4499221362078367').remove();"`.
 
-This feature is used in both the [tabs](https://tailcalled.github.io/hx-new/examples/tabs.html) example and [windows](https://tailcalled.github.io/hx-new/examples/windows.html) example to permit closing the tabs/windows.
+This feature is used in both the [tabs](https://tailcalled.github.io/hx-new/examples/tabs.html) example and
+[windows](https://tailcalled.github.io/hx-new/examples/windows.html) example to permit closing the tabs/windows.
 
 **Update events:** Let's say you want to run some Javascript once the item is updated. With hx-new, you can use `hx-on:hx-new:update`:
 
@@ -68,11 +77,16 @@ This feature is used in both the [tabs](https://tailcalled.github.io/hx-new/exam
 </template>
 ```
 
-This event gets triggered both when originally opening the item, and on any subsequent openings. It can be placed on any element within the subtree that gets inserted.
+This event gets triggered both when originally opening the item, and on any subsequent openings. It can be placed on any element within the subtree
+that gets inserted.
 
-This feature is used in the [tabs](https://tailcalled.github.io/hx-new/examples/tabs.html) example to select the opened tab, and in the [windows](https://tailcalled.github.io/hx-new/examples/windows.html) example to bring the opened window to the front. 
+This feature is used in the [tabs](https://tailcalled.github.io/hx-new/examples/tabs.html) example to select the opened tab, and in the
+[windows](https://tailcalled.github.io/hx-new/examples/windows.html) example to bring the opened window to the front. 
 
-**Multiple targetting:** Let's say you are making tabs. In that case, you need both the header for the tab (so that you can find the tab again after having switched to a different one), and the content for the tab, and they have to be inserted in different locations. As shown in the [tabs](https://tailcalled.github.io/hx-new/examples/tabs.html) example, hx-new can handle this by placing additional `<template>` tags with different `hx-target` routing:
+**Multiple targetting:** Let's say you are making tabs. In that case, you need both the header for the tab (so that you can find the tab again
+after having switched to a different one), and the content for the tab, and they have to be inserted in different locations. As shown in the
+[tabs](https://tailcalled.github.io/hx-new/examples/tabs.html) example, hx-new can handle this by placing additional `<template>` tags with
+different `hx-target` routing:
 
 ```html
 <div id="tabs">
@@ -97,7 +111,9 @@ This feature is used in the [tabs](https://tailcalled.github.io/hx-new/examples/
 </template>
 ```
 
-**htmx://response-url/:** If the template has a `hx-<http_verb>` attribute that starts with `htmx://response-url/`, it will be replaced by the URL for the resource that the template was instantiated with. This is used by the [combined tabs and windows](https://tailcalled.github.io/hx-new/examples/combined.html) example to add a "As Tab" button:
+**htmx://response-url/:** If the template has a `hx-<http_verb>` attribute that starts with `htmx://response-url/`, it will be replaced by the URL
+for the resource that the template was instantiated with. This is used by the
+[combined tabs and windows](https://tailcalled.github.io/hx-new/examples/combined.html) example to add a "As Tab" button:
 
 ```html
 <template id="window" hx-target="#desktop" hx-swap="beforeend">
@@ -127,8 +143,13 @@ This feature is used in the [tabs](https://tailcalled.github.io/hx-new/examples/
 
 If you are not making components for htmx, you should not use hx-new.
 
-If you can render your components with server side templating, do that rather than using hx-new. (Or if you want to render them on the client, use [facet](https://github.com/kgscialdone/facet).) hx-new has client-side templating as a core feature, but they are not very dynamic or robust and the main reason for their existence is to support the other features.
+If you can render your components with server side templating, do that rather than using hx-new. (Or if you want to render them on the client, use
+[facet](https://github.com/kgscialdone/facet).) hx-new has client-side templating as a core feature, but they are not very dynamic or robust and the
+main reason for their existence is to support the other features.
 
-If you do not want to rely on experimental/incomplete technology, make hand-written components rather than using hx-new. I kind of hard to rewrite a good chunk of the htmx swapping logic to make hx-new work, and I know there's lots of things I haven't implemented yet. I hope to iron out any bugs as I encounter them, but there are parts of htmx I don't really use, so they will likely be broken in hx-new indefinitely.
+If you do not want to rely on experimental/incomplete technology, make hand-written components rather than using hx-new. I kind of hard to rewrite a
+good chunk of the htmx swapping logic to make hx-new work, and I know there's lots of things I haven't implemented yet. I hope to iron out any bugs as I
+encounter them, but there are parts of htmx I don't really use, so they will likely be broken in hx-new indefinitely.
 
-If you still want to continue, I welcome PRs with cleanups, extensions, bugfixes, etc.. (I cannot promise to include any PRs, no matter how well-written, but I will try if they are good.)
+If you still want to continue, I welcome PRs with cleanups, extensions, bugfixes, etc.. (I cannot promise to include any PRs, no matter how
+well-written, but I will try if they are good.)
