@@ -24,7 +24,7 @@
         drag.draggingElement.style.top = (event.clientY - drag.clickY + drag.startY) + 'px';
     }" onmouseup="drag.draggingElement = null;">
 
-        <a href="tabs.html">See also: tabs.</a>
+        See also: <a href="tabs.html">tabs</a>, or <a href="combined.html">tabs combined with windows</a>.
 
         <button hx-get="../placeholders/lipsum.html" hx-swap="new:#window">Open Lipsum</button>
         <button hx-get="../placeholders/form.html" hx-swap="new:#window">Open Form</button>
@@ -38,10 +38,12 @@
                     style="z-index: 1; left: 100px; top: 100px; width: 400px; height: 300px;"
                     id="window-root"
                     onmousedown*="bringToFront(document.querySelector('#window-root'))"
-                    hx-new:oncreate*="bringToFront(document.querySelector('#window-root'))"
+                    hx-on:hx-new:update*="bringToFront(document.querySelector('#window-root'))"
             >
                 <div class="window-head">
-                    <div class="window-title" onmousedown*="drag(document.querySelector('#window-root'), event)" hx-slot="#title">Untitled Window</div>
+                    <div class="window-title" onmousedown*="drag(document.querySelector('#window-root'), event)" hx-slot="#title">
+                        Untitled Window
+                    </div>
                     <button type="button" class="close-button" onclick*="document.querySelector('#window-root').remove();">X</button>
                 </div>
                 <div class="window-content" hx-slot></div>

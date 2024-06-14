@@ -21,7 +21,7 @@
     </head>
     <body hx-ext="hx-new">
 
-        <a href="windows.html">See also: windows.</a>
+        See also: <a href="windows.html">windows</a>, or <a href="combined.html">tabs combined with windows</a>.
 
         <button hx-get="../placeholders/lipsum.html" hx-swap="new:#tab">Open Lipsum</button>
         <button hx-get="../placeholders/form.html" hx-swap="new:#tab">Open Form</button>
@@ -46,7 +46,7 @@
                     ">X</button>
                 </div>
             </template>
-            <div id="tab-elements" hx-new:oncreate*="updateSelection('#tab-elements', '#tab-head')" hx-slot></div>
+            <div id="tab-elements" hx-on:hx-new:update*="updateSelection('#tab-elements', '#tab-head')" hx-slot></div>
         </template>
 
     </body>

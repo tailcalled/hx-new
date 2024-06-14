@@ -56,6 +56,7 @@
         }
     }
 
+
     htmx.defineExtension('hx-new', {
         init: function (apiRef) {
             api = apiRef;
@@ -82,10 +83,17 @@
                 for (let node of traverse(element)) {
                     processNode(node, evt);
                 }
+                let addedElements = [];
+                let updatedElements = [];
                 let rootSlot = null;
                 for (let template of existing) {
-                    for (let slot of template.querySelectorAll("[hx-slot]")) {
-                        if (slot.getAttribute("hx-slot") == "") continue;
+                    updatedElements.push(template);
+                    for (let slot of traverse(template)) {
+                        if (!slot.hasAttribute("hx-slot")) continue;
+                        if (slot.getAttribute("hx-slot") == "") {
+                            rootSlot = slot;
+                            continue;
+                        }
                         let target = slot.getAttribute("hx-slot");
                         if (target.charAt(0) == "#" && elementIface.hasOwnProperty(target.substring(1))) {
                             target = "#" + elementIface[target.substring(1)];
@@ -93,17 +101,38 @@
                         let content = element.querySelector(target);
                         if (content) {
                             slot.replaceChildren(content);
+                            for (let child of slot.children) {
+                                addedElements.push(child);
+                            }
                         }
                     }
-                    rootSlot = rootSlot || template.querySelector("[hx-slot=\"\"]");
                 }
                 if (rootSlot) {
                     rootSlot.replaceChildren(element);
-                }
-                for (let template of existing) for (let evNode of traverse(template)) {
-                    if (evNode.hasAttribute("hx-new:oncreate")) {
-                        eval(evNode.getAttribute("hx-new:oncreate"));
+                    for (let elt of rootSlot.children) {
+                        addedElements.push(elt);
                     }
+                }
+                for (let elt of addedElements) {
+                    htmx.trigger(elt, "htmx:afterSwap", evt);
+                }
+                for (let elt of addedElements) {
+                    if (elt.classList) {
+                        elt.classList.remove(htmx.config.addedClass);
+                    }
+                    htmx.process(elt);
+                    htmx.trigger(elt, "htmx:load", evt);
+                }
+                for (let elt of updatedElements) {
+                    if (elt.hasAttribute("hx-on:hx-new:update") || elt.hasAttribute("hx-new:dispatch-update-event")) {
+                        elt.dispatchEvent(new CustomEvent("hx-new:update", { detail: { elt: elt }}));
+                    }
+                    for (let evNode of elt.querySelectorAll("[hx-on\\3ahx-new\\3aupdate], [hx-new\\3adispatch-update-event]")) {
+                        evNode.dispatchEvent(new CustomEvent("hx-new:update", { detail: { elt: evNode }}));
+                    }
+                }
+                for (let elt of addedElements) {
+                    htmx.trigger(elt, "htmx:afterSettle");
                 }
                 return false;
             }
@@ -154,14 +183,19 @@
             let combinedSettleInfo = {
                 elts: settleInfos.flatMap(x => x.elts),
                 tasks: settleInfos.flatMap(x => x.tasks),
-                title: undefined, // ??? what is
+                title: undefined,
             }
-            api.settleImmediately(combinedSettleInfo);
-        
             for (let elt of combinedSettleInfo.elts) {
-                for (let node of elt.querySelectorAll(":scope [hx-new\\3aoncreate]")) {
-                    eval(node.getAttribute("hx-new:oncreate"));
+                htmx.trigger(elt, "htmx:afterSwap", evt);
+            }
+            api.settleImmediately(combinedSettleInfo.tasks);
+            for (let elt of combinedSettleInfo.elts) {
+                for (let evNode of elt.querySelectorAll("[hx-on\\3ahx-new\\3aupdate], [hx-new\\3adispatch-update-event]")) {
+                    evNode.dispatchEvent(new CustomEvent("hx-new:update", { detail: { elt: evNode }}));
                 }
+            }
+            for (let elt of combinedSettleInfo.elts) {
+                htmx.trigger(elt, "htmx:afterSettle", evt);
             }
 
             return false;

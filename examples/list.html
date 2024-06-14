@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        <script src="../src/hx-new.js"></script>
+    </head>
+    <body hx-ext="hx-new">
+
+        This is a boring example. Instead, see <a href="windows.html">windows</a> or <a href="tabs.html">tabs</a>.
+
+        <button hx-get="../placeholders/lipsum.html" hx-swap="new:#item">Open Lipsum</button>
+        <button hx-get="../placeholders/form.html" hx-swap="new:#item">Open Form</button>
+
+        <ul id="list"></ul>
+
+        <template id="item" hx-target="#list" hx-swap="beforeend">
+            <li hx-slot></li>
+        </template>
+
+    </body>
+</html>
