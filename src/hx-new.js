@@ -161,7 +161,7 @@
                 processNode(node, evt);
             }
 
-            let templates = [result];
+            let templates = [];
             for (let template of traverse(result)) {
                 if (template.tagName != "TEMPLATE") continue;
                 for (let child of template.content.children) {
